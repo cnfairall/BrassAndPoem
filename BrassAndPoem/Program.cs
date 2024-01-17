@@ -106,7 +106,7 @@ void DisplayAllProducts(List<Product> products, List<ProductType> productTypes)
 {
     for (int i = 0; i < products.Count; i++)
     {
-        Console.WriteLine($"{i + 1}. {products[i].Name}, {products[i].Price}, {typeTitles[products[i].ProductTypeId]} ");
+        Console.WriteLine($"{i + 1}. {products[i].Name}, {products[i].Price} dollars, {typeTitles[products[i].ProductTypeId]} ");
     }
 }
 
@@ -137,7 +137,7 @@ void DeleteProduct(List<Product> products, List<ProductType> productTypes, List<
     }
 
     Console.WriteLine(@$"You chose:
-    {chosenProduct.Name}, {chosenProduct.Price}, {typeTitles[chosenProduct.ProductTypeId]}");
+    {chosenProduct.Name}, {chosenProduct.Price} dollars, {typeTitles[chosenProduct.ProductTypeId]}");
 
     string choice = null;
 
@@ -152,7 +152,7 @@ void DeleteProduct(List<Product> products, List<ProductType> productTypes, List<
     }
     else if (choice == "1")
     {
-        products.RemoveAt(response - 1);
+        products.Remove(chosenProduct);
 
     }
 
@@ -160,12 +160,100 @@ void DeleteProduct(List<Product> products, List<ProductType> productTypes, List<
 
 void AddProduct(List<Product> products, List<ProductType> productTypes)
 {
-    throw new NotImplementedException();
+    Console.WriteLine(@"Please enter new product in this format:
+    'name, price' ");
+
+    string[] response = (Console.ReadLine()).Split(",");
+    string newName = response[0];
+    decimal newPrice = Convert.ToDecimal(response[1]);
+
+    Console.WriteLine(@"Please select product type:
+    0. Brass
+    1. Poem");
+
+    int newType = int.Parse(Console.ReadLine());
+
+    Product newProduct = new Product
+    {
+        Name = newName,
+        Price = newPrice,
+        ProductTypeId = newType
+
+    };
+
+    products.Add(newProduct);
+
+    Console.WriteLine($"You added: {newProduct.Name}, {newProduct.Price}, {typeTitles[newProduct.ProductTypeId]}");
+
 }
 
 void UpdateProduct(List<Product> products, List<ProductType> productTypes)
 {
-    throw new NotImplementedException();
+    string newName = null;
+    decimal newPrice = 0;
+    int newTypeId = 0;
+
+
+    Console.WriteLine("Please select product to update:");
+
+    DisplayAllProducts(products, productTypes);
+
+    Product chosenProduct = null;
+
+    while (chosenProduct == null)
+    {
+        Console.WriteLine("Please enter a product number: ");
+        try
+        {
+            int choice = int.Parse(Console.ReadLine().Trim());
+
+            chosenProduct = products[choice - 1];
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Please type only integers!");
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Console.WriteLine("Please choose an existing item only!");
+        }
+    }
+
+    Console.WriteLine(@$"You chose:
+    {chosenProduct.Name}, {chosenProduct.Price} dollars, and {typeTitles[chosenProduct.ProductTypeId]}");
+
+    Console.WriteLine("Please enter new name. If no change is needed, press enter");
+
+    string response = (Console.ReadLine().Trim());
+    if (String.IsNullOrWhiteSpace(response) == false)
+    {
+        newName = response;
+        chosenProduct.Name = newName;
+    }
+
+    Console.WriteLine("Please enter new price. If no change is needed, press enter");
+
+    response = (Console.ReadLine().Trim());
+    if (String.IsNullOrWhiteSpace(response) == false)
+    {
+        newPrice = Convert.ToDecimal(response);
+        chosenProduct.Price = newPrice;
+    }
+
+    Console.WriteLine(@"Please enter new product type. Select
+    0 for Brass
+    1 for Poem
+    If no change is needed, press enter");
+
+    response = (Console.ReadLine().Trim());
+    if (String.IsNullOrWhiteSpace(response) == false)
+    {
+        newTypeId = int.Parse(response);
+        chosenProduct.ProductTypeId = newTypeId;
+    }
+
+    Console.WriteLine(@$"You updated your product to read:
+    {chosenProduct.Name}, {chosenProduct.Price} dollars, {typeTitles[chosenProduct.ProductTypeId]}");
 }
 
 // don't move or change this!
